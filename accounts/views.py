@@ -1,15 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from .forms import CustomUserCreationForm
-from django.shortcuts import render, redirect
+
 
 def register(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')
+            return redirect("login")
     else:
         form = CustomUserCreationForm()
-    
-    return render(request, 'register.html', {'form': form})
+
+    return render(request, "register.html", {"form": form})

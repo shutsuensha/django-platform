@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,16 +14,26 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Ad',
+            name="Ad",
             fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('title', models.CharField(max_length=255)),
-                ('description', models.TextField()),
-                ('image', models.ImageField(blank=True, null=True, upload_to='ads_images/')),
-                ('category', models.CharField(max_length=100)),
-                ('condition', models.CharField(choices=[('new', 'Новый'), ('used', 'Б/у')], max_length=10)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ads', to=settings.AUTH_USER_MODEL)),
+                ("id", models.BigAutoField(primary_key=True, serialize=False)),
+                ("title", models.CharField(max_length=255)),
+                ("description", models.TextField()),
+                ("image", models.ImageField(blank=True, null=True, upload_to="ads_images/")),
+                ("category", models.CharField(max_length=100)),
+                (
+                    "condition",
+                    models.CharField(choices=[("new", "Новый"), ("used", "Б/у")], max_length=10),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="ads",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

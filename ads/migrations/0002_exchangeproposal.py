@@ -5,21 +5,45 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('ads', '0001_initial'),
+        ("ads", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ExchangeProposal',
+            name="ExchangeProposal",
             fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('comment', models.TextField(blank=True, null=True)),
-                ('status', models.CharField(choices=[('pending', 'Ожидает'), ('accepted', 'Принята'), ('rejected', 'Отклонена')], default='pending', max_length=10)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('ad_receiver', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='received_proposals', to='ads.ad')),
-                ('ad_sender', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sent_proposals', to='ads.ad')),
+                ("id", models.BigAutoField(primary_key=True, serialize=False)),
+                ("comment", models.TextField(blank=True, null=True)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("pending", "Ожидает"),
+                            ("accepted", "Принята"),
+                            ("rejected", "Отклонена"),
+                        ],
+                        default="pending",
+                        max_length=10,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "ad_receiver",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="received_proposals",
+                        to="ads.ad",
+                    ),
+                ),
+                (
+                    "ad_sender",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sent_proposals",
+                        to="ads.ad",
+                    ),
+                ),
             ],
         ),
     ]
