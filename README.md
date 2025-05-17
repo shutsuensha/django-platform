@@ -9,7 +9,8 @@
 - Django 5.2.1  
 - Django ORM  
 - Django Templates  
-- Django REST Framework  
+- Django REST Framework
+- Django Test
 - PostgreSQL
 - TailwindCSS
 - Ruff
