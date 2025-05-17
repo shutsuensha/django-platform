@@ -10,7 +10,9 @@
 - Django ORM  
 - Django Templates  
 - Django REST Framework  
-- PostgreSQL  
+- PostgreSQL
+- TailwindCSS
+- Ruff
 
 ---
 ## 🔗 Репозиторий
