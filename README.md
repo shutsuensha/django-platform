@@ -1,6 +1,10 @@
 # 📦 EffectiveMobile Job Task
+## ⏱ Дедлайн: не более 7-ми дней  
+**Старт:** 16.05.2025  
+**Завершение:** 17.05.2025
+---
 
-**Технологии:**  
+## 🔧 Технологии
 - Python 3.10.12  
 - Django 5.2.1  
 - Django ORM  
@@ -9,7 +13,6 @@
 - PostgreSQL  
 
 ---
-
 ## 🔗 Репозиторий
 ```bash
 git clone git@github.com:shutsuensha/effectivemobile-job-task.git
