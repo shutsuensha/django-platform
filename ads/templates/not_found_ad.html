@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Не найдено{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center p-6 animate-fade-in">
+  <div
+    class="w-full max-w-md bg-white bg-opacity-60 backdrop-blur-lg rounded-2xl shadow-2xl p-10 text-center
+           transition-transform duration-500 ease-out hover:scale-105 hover:bg-opacity-80"
+  >
+
+    <!-- Заголовок -->
+    <h1 class="text-3xl font-bold text-red-600 mb-4 animate-fade-in-up animation-delay-100">
+      404 Not Found
+    </h1>
+
+    <h1 class="text-3xl font-bold text-red-600 mb-4 animate-fade-in-up animation-delay-100">
+      Объявление не найдено
+    </h1>
+
+    <!-- Описание -->
+    <p class="text-gray-700 mb-6 opacity-0 animate-fade-in-up animation-delay-200">
+      Проверьте ссылку или попробуйте снова позже.
+    </p>
+
+    <!-- Кнопка -->
+    <a
+      href="{% url 'index' %}"
+      class="inline-block bg-blue-600 bg-opacity-80 backdrop-blur-sm text-white font-medium py-3 px-6 rounded-full
+             transition-all duration-300 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-1 hover:bg-opacity-100 hover:backdrop-blur-none"
+    >
+      Вернуться на главную
+    </a>
+  </div>
+</div>
+
+<style>
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+/* утилиты для анимаций */
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out both;
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out both;
+}
+.animation-delay-100 {
+  animation-delay: 0.1s;
+}
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+.animate-pulse-slow {
+  animation: pulse-slow 2s ease-in-out infinite;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Предложения мне
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto mt-12 px-4">
+
+  <a href="{% url 'index' %}"
+     class="inline-block mb-6 text-indigo-600 font-medium hover:underline transition">
+    ← Вернуться на главную
+  </a>
+
+  <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center animate-fadeInDown">
+    Предложения, адресованные мне
+  </h1>
+
+  <form method="get"
+        class="flex flex-wrap items-end gap-4 mb-10 bg-white bg-opacity-70 backdrop-blur-md p-6 rounded-xl shadow-md animate-fadeInUp">
+    <!-- фильтр по статусу и отправителю -->
+    <div class="flex-1 min-w-[150px]">
+      <label for="status" class="block mb-1 text-sm font-medium text-gray-700">Статус</label>
+      <select name="status" id="status"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400 transition">
+        <option value="" {% if selected_status == "" %}selected{% endif %}>Все</option>
+        <option value="pending" {% if selected_status == "pending" %}selected{% endif %}>Ожидает</option>
+        <option value="accepted" {% if selected_status == "accepted" %}selected{% endif %}>Принята</option>
+        <option value="rejected" {% if selected_status == "rejected" %}selected{% endif %}>Отклонена</option>
+      </select>
+    </div>
+
+    <div class="flex-1 min-w-[150px]">
+      <label for="sender" class="block mb-1 text-sm font-medium text-gray-700">Отправитель</label>
+      <select name="sender" id="sender"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400 transition">
+        <option value="" {% if selected_sender == "" %}selected{% endif %}>Все отправители</option>
+        {% for s in senders %}
+          <option value="{{ s.ad_sender__user__id }}"
+            {% if selected_sender|stringformat:"s" == s.ad_sender__user__id|stringformat:"s" %}selected{% endif %}>
+            {{ s.ad_sender__user__username }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="flex-none space-x-2">
+      <button type="submit"
+              class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
+        Фильтровать
+      </button>
+      <a href="{% url 'proposals-to-me-view' %}"
+         class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition">
+        Сбросить
+      </a>
+    </div>
+  </form>
+
+  {% if proposals %}
+    <div class="space-y-8">
+      {% for p in proposals %}
+        <div id="proposal-{{ p.id }}"
+            class="backdrop-blur-md rounded-xl shadow-lg p-6 animate-fadeInUp transform transition hover:scale-102 hover:shadow-2xl
+                    {% if p.status == 'pending' %}bg-yellow-50{% elif p.status == 'accepted' %}bg-green-50{% else %}bg-red-50{% endif %}">
+          
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">Предложение №{{ p.id }}</h2>
+            {% if p.status == 'pending' %}
+              <span class="status-text px-3 py-1 rounded-full text-lg font-semibold bg-yellow-100 text-yellow-800">
+                Ожидает
+              </span>
+            {% elif p.status == 'accepted' %}
+              <span class="status-text px-3 py-1 rounded-full text-lg font-semibold bg-green-100 text-green-800">
+                Принята
+              </span>
+            {% else %}
+              <span class="status-text px-3 py-1 rounded-full text-lg font-semibold bg-red-100 text-red-800">
+                Отклонена
+              </span>
+            {% endif %}
+          </div>
+
+          <p class="text-sm text-gray-600 mb-6">
+            <strong>Дата предложения:</strong> {{ p.created_at|date:"d.m.Y H:i" }}
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Ваше объявление -->
+            <div class="space-y-3">
+              <h3 class="font-medium text-gray-700">От: {{ p.ad_sender.title }}</h3>
+              {% if p.ad_sender.image %}
+                <img src="{{ p.ad_sender.image.url }}" alt="Объявление отправителя"
+                     class="w-full h-40 object-cover rounded-md shadow-sm" />
+              {% else %}
+                <div class="w-full h-40 bg-gray-100 flex items-center justify-center rounded-md">
+                  <span class="text-gray-400">Нет фото</span>
+                </div>
+              {% endif %}
+                <p class="text-gray-600">{{ p.ad_sender.description|truncatewords:15 }}</p>
+              <p class="text-sm text-gray-600"><strong>Категория:</strong> {{ p.ad_sender.category }}</p>
+              <p class="text-sm text-gray-600"><strong>Состояние:</strong> {{ p.ad_sender.get_condition_display }}</p>
+              <p class="text-sm text-gray-600"><strong>Пользователь:</strong> {{ p.ad_sender.user.username }}</p>
+              <p class="text-sm text-gray-600"><strong>Создано:</strong> {{ p.ad_sender.created_at|date:"d.m.Y H:i" }}</p>
+            </div>
+            <!-- Объявление получателя -->
+            <div class="space-y-3">
+              <h3 class="font-medium text-gray-700">К: {{ p.ad_receiver.title }}</h3>
+              {% if p.ad_receiver.image %}
+                <img src="{{ p.ad_receiver.image.url }}" alt="Ваше объявление"
+                     class="w-full h-40 object-cover rounded-md shadow-sm" />
+              {% else %}
+                <div class="w-full h-40 bg-gray-100 flex items-center justify-center rounded-md">
+                  <span class="text-gray-400">Нет фото</span>
+                </div>
+              {% endif %}
+              <p class="text-gray-600">{{ p.ad_receiver.description|truncatewords:15 }}</p>
+              <p class="text-sm text-gray-600"><strong>Категория:</strong> {{ p.ad_receiver.category }}</p>
+              <p class="text-sm text-gray-600"><strong>Состояние:</strong> {{ p.ad_receiver.get_condition_display }}</p>
+              <p class="text-sm text-gray-600"><strong>Пользователь:</strong> {{ p.ad_receiver.user.username }}</p>
+              <p class="text-sm text-gray-600"><strong>Создано:</strong> {{ p.ad_receiver.created_at|date:"d.m.Y H:i" }}</p>
+            </div>
+          </div>
+
+          {% if p.status == 'pending' %}
+            <div class="flex gap-4">
+              <button class="btn-accept px-4 py-2 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition text-2xl"
+                      data-id="{{ p.id }}">
+                Принять
+              </button>
+              <button class="btn-reject px-4 py-2 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition text-2xl"
+                      data-id="{{ p.id }}">
+                Отклонить
+              </button>
+            </div>
+          {% endif %}
+
+          {% if p.comment %}
+            <div class="mt-6 p-4 bg-gray-50 rounded-md border border-gray-200">
+              <p class="text-gray-700"><strong>Комментарий:</strong> {{ p.comment }}</p>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center text-gray-500">Нет входящих предложений.</p>
+  {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  function getCookie(name) {
+    let cookieValue = null;
+    document.cookie.split(';').forEach(cookie => {
+      cookie = cookie.trim();
+      if (cookie.startsWith(name + '=')) {
+        cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+      }
+    });
+    return cookieValue;
+  }
+
+  function updateProposalStatus(id, status) {
+    fetch(`/proposals/${id}/update-status/`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({ status })
+    })
+    .then(res => res.ok ? res.json() : res.json().then(d => Promise.reject(d.detail)))
+    .then(data => {
+      const div = document.getElementById(`proposal-${id}`);
+      const span = div.querySelector('.status-text');
+      const map = { pending: 'Ожидает', accepted: 'Принята', rejected: 'Отклонена' };
+      span.textContent = map[data.status] || data.status;
+      div.querySelectorAll('.btn-accept, .btn-reject').forEach(b => b.remove());
+
+        div.classList.remove('bg-yellow-50', 'bg-green-50', 'bg-red-50');
+
+        if (data.status === 'accepted') {
+            div.classList.add('bg-green-50');
+            span.className = 'status-text px-3 py-1 rounded-full text-lg font-semibold bg-green-100 text-green-800';
+        } else if (data.status === 'rejected') {
+            div.classList.add('bg-red-50');
+            span.className = 'status-text px-3 py-1 rounded-full text-lg font-semibold bg-red-100 text-red-800';
+        }
+        
+    })
+    .catch(err => alert(err));
+  }
+
+  document.body.addEventListener('click', e => {
+    if (e.target.classList.contains('btn-accept')) {
+      updateProposalStatus(e.target.dataset.id, 'accepted');
+    }
+    if (e.target.classList.contains('btn-reject')) {
+      updateProposalStatus(e.target.dataset.id, 'rejected');
+    }
+  });
+});
+</script>
+
+<style>
+@keyframes fadeInDown {0%{opacity:0;transform:translateY(-20px);}100%{opacity:1;transform:translateY(0);} }
+@keyframes fadeInUp   {0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:translateY(0);} }
+.animate-fadeInDown { animation: fadeInDown 0.8s ease forwards; }
+.animate-fadeInUp   { animation: fadeInUp 0.8s ease forwards; }
+.hover\:scale-102:hover { transform: scale(1.02); }
+</style>
+{% endblock %}

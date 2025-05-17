@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}My Django Site{% endblock %}</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+  <!-- Навбар -->
+  <nav class="fixed top-0 inset-x-0 z-50 bg-white/70 backdrop-blur-md shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      
+      <!-- Логотип -->
+      <a href="{% url 'index' %}" class="text-2xl font-extrabold text-indigo-600 hover:text-indigo-800 transition">
+        Exchange Ads Platform
+      </a>
+
+      <!-- Меню -->
+      <div class="space-x-6 flex items-center">
+        {% if user.is_authenticated %}
+          <span class="text-gray-700 font-medium">Привет, <span class="text-indigo-600">{{ user.username }}</span>!</span>
+            <form method="post" action="{% url 'logout' %}" class="inline">
+            {% csrf_token %}
+            <button type="submit"
+                    class="px-4 py-2 bg-red-100 text-red-600 rounded-md hover:bg-red-200 transition">
+                Logout
+            </button>
+            </form>
+        {% else %}
+          <a href="{% url 'login' %}"
+             class="px-4 py-2 text-gray-700 rounded-md hover:bg-indigo-50 hover:text-indigo-600 transition">
+            Login
+          </a>
+          <a href="{% url 'register' %}"
+             class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
+            Register
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Отступ, чтобы контент не прятался за фиксированным навбаром -->
+  <div class="h-20"></div>
+
+  <!-- Основной контент -->
+  <main class="max-w-7xl mx-auto px-6 py-8">
+    {% block content %}
+    <!-- Контент страниц будет сюда подставляться -->
+    {% endblock %}
+  </main>
+
+</body>
+</html>
