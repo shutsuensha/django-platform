@@ -1,4 +1,4 @@
-## 📦 EffectiveMobile Job Task
+## 🚀 EffectiveMobile Job Task
 #### Старт: 16.05.2025
 #### Завершение: 17.05.2025
 ---
